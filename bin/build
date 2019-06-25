@@ -62,7 +62,8 @@ uberjar() {
 }
 
 all() {
-    version && translations && frontend && sample-dataset && drivers && uberjar
+    # version && translations && frontend && sample-dataset && drivers && uberjar
+    version && frontend && sample-dataset && uberjar
 }
 
 no-translations() {
