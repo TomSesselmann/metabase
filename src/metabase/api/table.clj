@@ -126,6 +126,8 @@
                        :mbql (apply vector "binning-strategy" nil params)
                        :type "type/Coordinate"})
                     [default-entry
+                     [(tru "Bin every 0.001 degrees") ["bin-width" 0.001]]
+                     [(tru "Bin every 0.01 degrees") ["bin-width" 0.01]]
                      [(tru "Bin every 0.1 degrees") ["bin-width" 0.1]]
                      [(tru "Bin every 1 degree") ["bin-width" 1.0]]
                      [(tru "Bin every 10 degrees") ["bin-width" 10.0]]
