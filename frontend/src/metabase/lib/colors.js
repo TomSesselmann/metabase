@@ -14,37 +14,37 @@ export type ColorFamily = { [name: ColorName]: ColorString };
 // NOTE: KEEP SYNCRONIZED WITH COLORS.CSS
 /* eslint-disable no-color-literals */
 const colors = {
-  brand: "#F26722",
-  accent1: "#9CC177",
-  accent2: "#A989C5",
-  accent3: "#EF8C8C",
-  accent4: "#F9D45C",
-  accent5: "#F2A86F",
-  accent6: "#98D9D9",
-  accent7: "#7172AD",
-  "admin-navbar": "#7172AD",
-  white: "#FFFFFF",
-  black: "#2E353B",
-  success: "#84BB4C",
-  error: "#ED6E6E",
-  warning: "#F9CF48",
-  "text-dark": "#2E353B",
-  "text-medium": "#74838F",
-  "text-light": "#C7CFD4",
-  "text-white": "#FFFFFF",
-  "bg-black": "#2E353B",
-  "bg-dark": "#93A1AB",
-  "bg-medium": "#EDF2F5",
-  "bg-light": "#F9FBFC",
-  "bg-white": "#FFFFFF",
-  shadow: "rgba(0,0,0,0.08)",
-  border: "#D7DBDE",
+  brand:              "#F26722",
+  accent1:            "#9CC177",  // #9CC177
+  accent2:            "#A989C5",  // #A989C5
+  accent3:            "#33658A",  // #EF8C8C
+  accent4:            "#F9D45C",  // #F9D45C
+  accent5:            "#F2CD22",  // #F2A86F
+  accent6:            "#F22222",  // #98D9D9
+  accent7:            "#7172AD",  // #7172AD
+  "admin-navbar":     "#7172AD",
+  white:              "#FFFFFF",
+  black:              "#2E353B",
+  success:            "#3EC300",  // #84BB4C
+  error:              "#F22222",  // #ED6E6E
+  warning:            "#F2CD22",  // #F9CF48
+  "text-dark":        "#2E353B",
+  "text-medium":      "#74838F",
+  "text-light":       "#C7CFD4",
+  "text-white":       "#FFFFFF",
+  "bg-black":         "#2E353B",
+  "bg-dark":          "#93A1AB",
+  "bg-medium":        "#EDF2F5",
+  "bg-light":         "#F9FBFC",
+  "bg-white":         "#FFFFFF",
+  shadow:             "rgba(0,0,0,0.08)",
+  border:             "#D7DBDE",
   /* Saturated colors for the SQL editor. Shouldn't be used elsewhere since they're not white-labelable. */
-  "saturated-blue": "#2D86D4",
-  "saturated-green": "#70A63A",
-  "saturated-purple": "#885AB1",
-  "saturated-red": "#ED6E6E",
-  "saturated-yellow": "#F9CF48",
+  "saturated-blue":   "#2D86D4",  // #2D86D4
+  "saturated-green":  "#70A63A",  // #70A63A
+  "saturated-purple": "#885AB1",  // #885AB1
+  "saturated-red":    "#F22222",  // #ED6E6E
+  "saturated-yellow": "#F2CD22",  // #F9CF48
 };
 /* eslint-enable no-color-literals */
 export default colors;
