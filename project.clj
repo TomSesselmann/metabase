@@ -7,7 +7,7 @@
   :min-lein-version "2.5.0"
 
   :aliases
-  {"generate-sample-dataset"           ["with-profile" "+generate-sample-dataset" "run"]
+  {"generate-sample-dataset"           ["with-profile" "+generate-sample-pfp-dataset" "run"]
    "profile"                           ["with-profile" "+profile" "run" "profile"]
    "h2"                                ["with-profile" "+h2-shell" "run" "-url" "jdbc:h2:./metabase.db"
                                         "-user" "" "-password" "" "-driver" "org.h2.Driver"]
@@ -297,6 +297,14 @@
      [jdistlib "0.5.1" :exclusions [com.github.wendykierp/JTransforms]]] ; Distribution statistic tests
     :source-paths ["lein-commands/sample-dataset"]
     :main         ^:skip-aot metabase.sample-dataset.generate}
+
+   ;; generate sample PFP dataset with `lein generate-sample-dataset`
+   :generate-sample-pfp-dataset
+   {:dependencies
+    [[faker "0.3.2"]                                                     ; Fake data generator -- port of Perl/Ruby library
+     [jdistlib "0.5.1" :exclusions [com.github.wendykierp/JTransforms]]] ; Distribution statistic tests
+    :source-paths ["lein-commands/sample-dataset"]
+    :main         ^:skip-aot metabase.sample-dataset.generate-pfp}
 
    ;; lein strip-and-compress my-plugin.jar [path/to/metabase.jar]
    ;; strips classes from my-plugin.jar that already exist in other JAR and recompresses with higher compression ratio.
