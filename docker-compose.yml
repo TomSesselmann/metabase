@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  db-app:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=5tXBHnx3EHpn
+
+  app-metabase:
+    image: tom-test
+    environment:
+      - MB_DB_TYPE=postgres
+      - MB_DB_DBNAME=postgres
+      - MB_DB_PORT=5432
+      - MB_DB_USER=postgres
+      - MB_DB_PASS=5tXBHnx3EHpn
+      - MB_DB_HOST=db-app
+    ports:
+      - 3000:3000
+
+  db-pfp:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=5tXBHnx3EHpn
+    volumes:
+      - ./sql/pfp-data-init.sql:/docker-entrypoint-initdb.d/pfp-data-init.sql
