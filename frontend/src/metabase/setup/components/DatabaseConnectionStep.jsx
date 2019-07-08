@@ -16,7 +16,7 @@ import { DEFAULT_SCHEDULES } from "metabase/admin/databases/database";
 export default class DatabaseConnectionStep extends Component {
   constructor(props, context) {
     super(props, context);
-    this.state = { engine: "", formError: null };
+    this.state = { engine: "", formError: null, tryDockerDb: true };
   }
 
   static propTypes = {
@@ -133,6 +133,28 @@ export default class DatabaseConnectionStep extends Component {
     );
   }
 
+  componentDidUpdate(prevProps) {
+    const { activeStep, stepNumber } = this.props;
+    if (activeStep !== prevProps.activeStep && activeStep === stepNumber) {
+      const pfpDatabaseDetails = {
+        engine: "postgres",
+        name: "PFP Data",
+        details: {
+          "dbname": "postgres",
+          "host": "db-pfp",
+          // "host": "localhost",
+          "password": "5tXBHnx3EHpn",
+          "port": 5432,
+          "user": "postgres",
+        }
+      };
+      this.connectionDetailsCaptured(pfpDatabaseDetails);
+      this.setState({
+        tryDockerDb: false,
+      });
+    }
+  }
+
   render() {
     const {
       activeStep,
@@ -140,7 +162,7 @@ export default class DatabaseConnectionStep extends Component {
       setActiveStep,
       stepNumber,
     } = this.props;
-    const { engine, formError } = this.state;
+    const { engine, formError, tryDockerDb } = this.state;
     const engines = MetabaseSettings.get("engines");
 
     let stepText = t`Add your data`;
@@ -161,7 +183,21 @@ export default class DatabaseConnectionStep extends Component {
           setActiveStep={setActiveStep}
         />
       );
-    } else {
+    }
+
+    // Try adding the PFP Docker DB
+    else if (activeStep === stepNumber && tryDockerDb) {
+      return (
+        <section className="SetupStep bg-white rounded full relative SetupStep--active">
+          <StepTitle title="Creating database..." circleText={"2"} />
+          <div className="mb4">
+            <p>Spinner...</p>
+          </div>
+        </section>
+      );
+    }
+
+    else {
       return (
         <section className="SetupStep bg-white rounded full relative SetupStep--active">
           <StepTitle title={stepText} circleText={"2"} />
