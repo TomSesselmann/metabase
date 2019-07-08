@@ -8,7 +8,7 @@
            java.util.Arrays))
 
 
-(def ^:const ^:private special-words ["checkins"])
+(def ^:const ^:private special-words ["checkins", "detections", "tpu"])
 
 (defn- slurp-words-by-frequency []
   (concat special-words (str/split-lines (slurp (io/resource "words-by-inv-frequency.txt")))))
