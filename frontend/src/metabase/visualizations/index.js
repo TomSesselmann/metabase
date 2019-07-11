@@ -15,6 +15,7 @@ import MapViz from "./visualizations/Map.jsx";
 import ScatterPlot from "./visualizations/ScatterPlot.jsx";
 import Funnel from "./visualizations/Funnel.jsx";
 import Gauge from "./visualizations/Gauge.jsx";
+import Timeline from "./visualizations/Timeline.jsx";
 import ObjectDetail from "./visualizations/ObjectDetail.jsx";
 import { t } from "ttag";
 import _ from "underscore";
@@ -140,6 +141,7 @@ registerVisualization(ScatterPlot);
 registerVisualization(PieChart);
 registerVisualization(MapViz);
 registerVisualization(Funnel);
+registerVisualization(Timeline);
 registerVisualization(ObjectDetail);
 
 export default visualizations;
