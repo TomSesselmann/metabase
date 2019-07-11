@@ -303,11 +303,18 @@ export default class Navbar extends Component {
               <Button medium>{t`Ask a question`}</Button>
             </Link>
           )}
+          <input type="file" className="hide" ref={ref => this.dataUploadInput = ref} />
           <EntityMenu
-            tooltip={t`Create`}
+            tooltip={t`Add`}
             className="hide sm-show"
             triggerIcon="add"
             items={[
+              {
+                title: t`Upload data`,
+                icon: `csv`,
+                action: () => this.dataUploadInput.click(),
+                event: `NavBar;Upload Data Click;`,
+              },
               {
                 title: t`New dashboard`,
                 icon: `dashboard`,
