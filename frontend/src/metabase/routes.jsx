@@ -14,6 +14,7 @@ import MetabaseSettings from "metabase/lib/settings";
 import App from "metabase/App.jsx";
 
 import HomepageApp from "metabase/home/containers/HomepageApp";
+import AllIcons from "metabase/AllIcons";
 
 // auth containers
 import AuthApp from "metabase/auth/AuthApp";
@@ -344,6 +345,7 @@ export const getRoutes = store => (
         })
       }
     />
+    <Route path="icons" component={AllIcons} />
 
     {/* DEPRECATED */}
     {/* NOTE: these custom routes are needed because <Redirect> doesn't preserve the hash */}
