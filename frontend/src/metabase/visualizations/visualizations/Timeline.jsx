@@ -1,16 +1,16 @@
 /* @flow */
 
+// Author: Thomas Sesselmann
+// Date: 15/07/2019
+// TODO: Add Hover functionality
+// TODO: Dynamic tick intervals
+// TODO: Make it work with metabase data grouping
+// TODO: Add settings
+
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { t } from "ttag";
 import d3 from "d3";
 import cx from "classnames";
-
-import _ from "underscore";
-
-import colors from "metabase/lib/colors";
-import { formatValue } from "metabase/lib/formatting";
-import { isNumeric } from "metabase/lib/schema_metadata";
 import { columnSettings } from "metabase/visualizations/lib/settings/column";
 
 import timeline from "metabase/visualizations/lib/d3-timeline";
@@ -27,7 +27,9 @@ export default class Timeline extends Component {
   static minSize = { width: 4, height: 4 };
 
   static isSensible({ cols, rows }) {
-    return rows.length === 1 && cols.length === 1;
+    // Really basic check
+    // TODO: Make this more accurate
+    return cols.length > 2;
   }
 
   static checkRenderable([
@@ -35,16 +37,20 @@ export default class Timeline extends Component {
       data: { cols, rows },
     },
   ]) {
-    if (!isNumeric(cols[0])) {
-      throw new Error(t`Gauge visualization requires a number.`);
+    if (!(
+      cols.find(({name}) => name.toUpperCase() === "START_TIME") &&
+      cols.find(({name}) => name.toUpperCase() === "END_TIME") &&
+      cols.find(({name}) => name.toUpperCase() === "CLASS_TYPE")
+    )) {
+      throw new Error(t`Timeline visualization requires Raw data.`);
     }
+    
   }
 
   state = {
-    mounted: false,
+    width: 0,
+    height: 0,
   };
-
-  _label: ?HTMLElement;
 
   static settings = {
     ...columnSettings({
@@ -52,13 +58,11 @@ export default class Timeline extends Component {
   };
 
   composeData(rows, cols) {
-    console.log(rows, cols);
+    const startTimeIndex = cols.findIndex(({name}) => name.toUpperCase() === "START_TIME");
+    const endTimeIndex = cols.findIndex(({name}) => name.toUpperCase() === "END_TIME");
+    const classIndex = cols.findIndex(({name}) => name.toUpperCase() === "CLASS_TYPE");
 
-    const startTimeIndex = cols.findIndex(({name}) => name === "start_time");
-    const endTimeIndex = cols.findIndex(({name}) => name === "end_time");
-    const classIndex = cols.findIndex(({name}) => name === "class_type");
-
-    let data = {};
+    const data = {};
 
     for (let i = rows.length - 1; i >= 0; i--) {
       const row = rows[i];
@@ -72,67 +76,74 @@ export default class Timeline extends Component {
       })
     }
 
-    console.log("data: ", data);
-
     return Object.values(data);
   }
 
-  componentDidMount() {
-    this.setState({ mounted: true });
+  componentDidUpdate(prevProps, prevState) {
     const {
       series: [
-        {
-          data: { rows, cols },
-        },
+        { data }
       ],
     } = this.props;
-
-    const data = this.composeData(rows, cols);
 
     const width = this.timelineContainer.offsetWidth;
     const height = this.timelineContainer.offsetHeight;
 
-    const chart = timeline()
-      .width(width)
-      .height(height)
-      .stack()
-      .itemHeight((height - 70) / data.length)
-      .itemMargin(15)
-      .margin({left:128, right:0, top:0, bottom:0})
-      .tickFormat({
-        format: d3.time.format("%b %e"),
-        tickTime: d3.time.days,
-        tickInterval: 1,
-        tickSize: 6
-      })
-      // .hover(function(d, i, datum) {
-      //     // d is the current rendering object
-      //     // i is the index during d3 rendering
-      //     // datum is the id object
-      //     //var div = $('#hoverRes');
-      //     // var colors = chart.colors();
-      //     //div.find('.coloredDiv').css('background-color', colors(i))
-      //     //div.find('#name').text(datum.label);
-      // })
-      // .click(function(d, i, datum) {
-      //     //alert(datum.label);
-      // })
-      // .scroll(function(x, scale) {
-      //     // $("#scrolled_date").text(scale.invert(x) + " to " + scale.invert(x+width));
-      // });
-    d3.select("#timeline-chart").datum(data).call(chart);
+    console.log(data.rows, data.cols);
+
+    if (
+      prevState.width !== width ||
+      prevState.height !== height ||
+      prevProps.data !== data
+    ) {
+      this.setState({ width: width, height: height });
+
+      const composedData = this.composeData(data.rows, data.cols);
+      const margin = 15;
+
+      const chart = timeline()
+        .width(width)
+        .stack()
+        .itemHeight((height - (margin * composedData.length) - 25) / composedData.length)
+        .itemMargin(margin)
+        .margin({left:128, right:0, top:0, bottom:0})
+        .tickFormat({
+          format: d3.time.format("%b %e"),
+          tickTime: d3.time.days,
+          tickInterval: 1,
+          tickSize: 6
+        })
+        // .hover(function(d, i, datum) {
+        //     // d is the current rendering object
+        //     // i is the index during d3 rendering
+        //     // datum is the id object
+        //     //var div = $('#hoverRes');
+        //     // var colors = chart.colors();
+        //     //div.find('.coloredDiv').css('background-color', colors(i))
+        //     //div.find('#name').text(datum.label);
+        // })
+        // .click(function(d, i, datum) {
+        //     //alert(datum.label);
+        // })
+        // .scroll(function(x, scale) {
+        //     // $("#scrolled_date").text(scale.invert(x) + " to " + scale.invert(x+width));
+        // });
+      d3.select('#timeline-chart').remove();
+      d3.select("#timeline-container")
+        .append("svg")
+        .attr("width", width)
+        .attr("id", "timeline-chart")
+        .datum(composedData)
+        .call(chart);
+    }
   }
 
   render() {
-    const {
-      className,
-    } = this.props;
+    const { className } = this.props;
     
     return (
-      <div className={cx(className, "relative p2")}>
-        <div className="overflow-hidden full-height" ref={ref => this.timelineContainer = ref}>
-          <svg id="timeline-chart" style={{ width: "100%" }}>
-          </svg>
+      <div className={cx(className, "relative m2")}>
+        <div id="timeline-container" className="spread" ref={ref => this.timelineContainer = ref}>
         </div>
       </div>
     );
